@@ -678,7 +678,6 @@ void drawScene(){
                     drawMan(i);
                 glPopMatrix();
             }
-
             glPushMatrix();
                 glColor3f(1.0f,0.0f,0.0f);
                 score();
