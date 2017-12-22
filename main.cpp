@@ -703,7 +703,7 @@ int main(int argc, char **argv){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(1200,800);
 	glutInitWindowPosition(220,50);
-	glutCreateWindow("Shooting Game");
+	glutCreateWindow("Enemy Shooting Game");
 	initRendering();
 	glutDisplayFunc(drawScene);
 	glutIdleFunc(drawScene);
