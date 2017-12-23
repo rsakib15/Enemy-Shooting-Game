@@ -14,12 +14,12 @@
 
 using namespace std;
 
-double man=0.1f;
-double man_x[SZ];
-double man_y[SZ];
-double man_vel[SZ];
-double man_stat[SZ]={0};
-double man_col[SZ];
+double enemy=0.1f;
+double enemy_x[SZ];
+double enemy_y[SZ];
+double enemy_vel[SZ];
+double enemy_stat[SZ]={0};
+double enemy_col[SZ];
 
 double shooter_x=0.0f;
 double shooter_y=-1.9f;
@@ -148,7 +148,7 @@ void drawBullet(){
     glPopMatrix();
 }
 
-void drawMan(){
+void drawenemy(){
 	int i;
     if(frontCount==-1){
         cnt=0;
@@ -158,12 +158,12 @@ void drawMan(){
     }
 	if(frontCount<100000){
 		for(i=0;cnt<=2;i++){
-			if(i>frontCount || man_y[i]<=-5.0f){
-                man_x[i]=((rand()%100)*1.0f/100.0)+((rand()%4)*1.0f)-2;
-                man_y[i]=2.3f;
-				man_vel[i]=.003f + 3*((rand()%10*1.0f)/10000);
-				man_stat[i]=0;
-				man_col[i]=rand()%3;
+			if(i>frontCount || enemy_y[i]<=-5.0f){
+                enemy_x[i]=((rand()%100)*1.0f/100.0)+((rand()%4)*1.0f)-2;
+                enemy_y[i]=2.3f;
+				enemy_vel[i]=.003f + 3*((rand()%10*1.0f)/10000);
+				enemy_stat[i]=0;
+				enemy_col[i]=rand()%3;
 				frontCount++;
 				cnt++;
 			}
@@ -171,7 +171,7 @@ void drawMan(){
 	}
 }
 
-void drawMan(int i){
+void drawenemy(int i){
 	glColor3f(0.0,0.0,0.0);
 
     glPushMatrix();
@@ -287,14 +287,14 @@ void drawShooter(){
 
 void new_update(int value){
 	for(int i=0;i<=frontCount;i++){
-		if(man_y[i]<=-1.6f){
-			man_vel[i]=0;
-			man_y[i]=-5.0f;
-			man_stat[i]=0;
+		if(enemy_y[i]<=-1.6f){
+			enemy_vel[i]=0;
+			enemy_y[i]=-5.0f;
+			enemy_stat[i]=0;
 			frontCount--;
 			points--;
 		}
-		if(shooter_x>man_x[i]-0.46f && shooter_x<man_x[i]+0.46f && man_y[i]-0.05f<=-1.7f){
+		if(shooter_x>enemy_x[i]-0.46f && shooter_x<enemy_x[i]+0.46f && enemy_y[i]-0.05f<=-1.7f){
 			life--;
 		}
 		if(life==0){
@@ -318,10 +318,10 @@ void new_update(int value){
 
 	for(int i=0;i<=frontCount;i++){
 		for(int j=0;j<=high;j++){
-			if(tip_x[j]>man_x[i]-0.05f && tip_x[j]<man_x[i]+0.05f && tip_y[j]>man_y[i]-0.05f && tip_y[j]<man_y[i]+0.05f && bullet_stat[j]==1){
-				man_vel[i]=0;
-				man_y[i]=-5.0f;
-				man_stat[i]=0;
+			if(tip_x[j]>enemy_x[i]-0.05f && tip_x[j]<enemy_x[i]+0.05f && tip_y[j]>enemy_y[i]-0.05f && tip_y[j]<enemy_y[i]+0.05f && bullet_stat[j]==1){
+				enemy_vel[i]=0;
+				enemy_y[i]=-5.0f;
+				enemy_stat[i]=0;
 				frontCount--;
 				bullet_stat[j]=0;
 				points++;
@@ -330,12 +330,12 @@ void new_update(int value){
 	}
 
 	for(int i=0;i<=frontCount;i++){
-		if(man_y[i]<0.0f && man_stat[i]==0){
+		if(enemy_y[i]<0.0f && enemy_stat[i]==0){
 			cnt--;
-			man_stat[i]=1;
+			enemy_stat[i]=1;
 		}
-		if(man_y[i]>=-1.85f){
-			man_y[i]-=man_vel[i];
+		if(enemy_y[i]>=-1.85f){
+			enemy_y[i]-=enemy_vel[i];
 		}
 	}
 
@@ -369,6 +369,10 @@ void showLife(){
 }
 
 void storeHighScore(){
+    ifstream infile("output.txt");
+    infile>>a;
+    infile.close();
+
     ofstream outfile("output.txt");
     if(points>a){
         outfile<<points<<endl;
@@ -431,8 +435,8 @@ void showAbout(){
     glColor3f(1.0f,1.0f,1.0f);
     renderBitmapString(-0.2f,1.7f,GLUT_BITMAP_TIMES_ROMAN_24,"ABOUT");
     renderBitmapString(-0.9f,0.7f,GLUT_BITMAP_TIMES_ROMAN_24,"The game is Designed and Developed by");
-    renderBitmapString(-0.9f,0.3f,GLUT_BITMAP_HELVETICA_18,"Sakib Rahman -  (13-23054-1)");
-    renderBitmapString(-0.9f,0.0f,GLUT_BITMAP_HELVETICA_18,"Samshad Rahman -  (15-28792-2)");
+    renderBitmapString(-0.9f,0.3f,GLUT_BITMAP_HELVETICA_18,"Sakib Rahenemy -  (13-23054-1)");
+    renderBitmapString(-0.9f,0.0f,GLUT_BITMAP_HELVETICA_18,"Samshad Rahenemy -  (15-28792-2)");
 
     glBegin(GL_LINES);
         glVertex2f(-0.6f,-1.5f);
@@ -446,13 +450,6 @@ void showAbout(){
 	glEnd();
 
 	renderBitmapString(-0.2f,-1.4f,GLUT_BITMAP_TIMES_ROMAN_24,"BACK");
-}
-
-void initRendering() {
-	glEnable(GL_DEPTH);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_COLOR_MATERIAL);
-	glClearColor(1.0f,1.0f,1.0f,0.0f);
 }
 
 void handleResize(int w, int h) {
@@ -651,7 +648,7 @@ void drawScene(){
 	}
 
 	else if(game_over==0 && game_play==1){
-		drawMan();
+		drawenemy();
 		glPushMatrix();
             glTranslatef(0.0f, 0.0f,-5.0f);
             glColor3f(0.0f, 0.0f, 0.0f);
@@ -673,9 +670,9 @@ void drawScene(){
 
             for(int i=0;i<=frontCount;i++){
                 glPushMatrix();
-                glTranslatef(man_x[i],man_y[i],0.0f);
-                if(man_vel[i]!=0)
-                    drawMan(i);
+                glTranslatef(enemy_x[i],enemy_y[i],0.0f);
+                if(enemy_vel[i]!=0)
+                    drawenemy(i);
                 glPopMatrix();
             }
             glPushMatrix();
@@ -703,7 +700,6 @@ int main(int argc, char **argv){
 	glutInitWindowSize(1200,800);
 	glutInitWindowPosition(220,50);
 	glutCreateWindow("Enemy Shooting Game");
-	initRendering();
 	glutDisplayFunc(drawScene);
 	glutIdleFunc(drawScene);
 	glutKeyboardFunc(handleKeypress1);
